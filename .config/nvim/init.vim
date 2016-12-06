@@ -159,7 +159,6 @@ let g:neomake_cpp_clang_maker = {
 imap <C-c> <Esc>:w<CR>
 
 " -- Compile cpp
-nnoremap <silent> <F7> :call vimterm#toggle()<CR>
 nnoremap <silent> <F4> :call vimterm#exec('echo "compiling ' . expand('%') . '" && g++ -m32 -O2 -static -lm -std=c++11 -Wall -Wextra -Werror -Wno-long-long -Wno-variadic-macros -Wsign-compare -fexceptions ' . expand('%') . ' -o /tmp/' . expand('%:t:r') . '.out && echo "compiled without errors"') <CR>
 nnoremap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" && /tmp/' . expand('%:t:r') . '.out') <CR>
 
@@ -169,6 +168,7 @@ tnoremap <A-j> <C-\><C-n><C-w>j
 tnoremap <A-k> <C-\><C-n><C-w>k
 tnoremap <A-l> <C-\><C-n><C-w>l
 tnoremap <Esc> <C-\><C-n>
+nnoremap <silent> <F7> :call vimterm#toggle()<CR>
 tnoremap <F7> <C-\><C-n><bar>:call vimterm#toggle()<CR>
 
 " -- Disable arrows
