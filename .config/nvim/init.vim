@@ -50,6 +50,7 @@ call dein#add('tpope/vim-surround')
 call dein#add('plasticboy/vim-markdown')
 call dein#add('kchmck/vim-coffee-script')
 call dein#add('digitaltoad/vim-pug')
+call dein#add('wavded/vim-stylus')
 
 " Linter
 call dein#add('neomake/neomake')
@@ -156,20 +157,36 @@ let g:neomake_cpp_clang_maker = {
   \ 'args': ['-fsyntax-only', '-Wall', '-Wextra'],
   \ 'stdlib':'libc++'
 \ }
-imap <C-c> <Esc>:w<CR>
 
 " -- Compile cpp
 nnoremap <silent> <F4> :call vimterm#exec('echo "compiling ' . expand('%') . '" && g++ -m32 -O2 -static -lm -std=c++11 -Wall -Wextra -Werror -Wno-long-long -Wno-variadic-macros -Wsign-compare -fexceptions ' . expand('%') . ' -o /tmp/' . expand('%:t:r') . '.out && echo "compiled without errors"') <CR>
 nnoremap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" && /tmp/' . expand('%:t:r') . '.out') <CR>
 
+" -- git
+nnoremap <F8> :call vimterm#exec('git add ' . expand('%') . ' && git status')<CR>
+nnoremap <F9> :call vimterm#exec('git commit')<CR>
+nnoremap <F10> :call vimterm#exec('git push')<CR>
+
 " -- Terminal movement
+tnoremap <Esc> <C-\><C-n>
+imap <C-c> <Esc>:w<CR>
+tmap <C-c> <Esc>:w<CR>
+nnoremap <silent> <F7> :call vimterm#toggle()<CR>
+tnoremap <silent> <F7> <C-\><C-n><bar>:call vimterm#toggle()<CR>
+
+" -- window switching
 tnoremap <A-h> <C-\><C-n><C-w>h
 tnoremap <A-j> <C-\><C-n><C-w>j
 tnoremap <A-k> <C-\><C-n><C-w>k
 tnoremap <A-l> <C-\><C-n><C-w>l
-tnoremap <Esc> <C-\><C-n>
-nnoremap <silent> <F7> :call vimterm#toggle()<CR>
-tnoremap <F7> <C-\><C-n><bar>:call vimterm#toggle()<CR>
+nnoremap <A-h> <C-\><C-n><C-w>h
+nnoremap <A-j> <C-\><C-n><C-w>j
+nnoremap <A-k> <C-\><C-n><C-w>k
+nnoremap <A-l> <C-\><C-n><C-w>l
+inoremap <A-h> <C-\><C-n><C-w>h
+inoremap <A-j> <C-\><C-n><C-w>j
+inoremap <A-k> <C-\><C-n><C-w>k
+inoremap <A-l> <C-\><C-n><C-w>l
 
 " -- Disable arrows
 inoremap <Up> <NOP>
