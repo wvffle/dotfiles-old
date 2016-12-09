@@ -164,7 +164,7 @@ nnoremap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" 
 
 " -- git
 nnoremap <F8> :call vimterm#exec('git add ' . expand('%') . ' && git status')<CR>
-nnoremap <F9> :call vimterm#exec('git commit')<CR>
+nnoremap <F9> :call vimterm#exec('echo "commit message: " && read commit_message && echo "\"$commit_message\"" \| xargs git commit -m')<CR>
 nnoremap <F10> :call vimterm#exec('git push')<CR>
 
 " -- Terminal movement
