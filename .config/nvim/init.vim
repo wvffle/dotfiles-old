@@ -82,6 +82,7 @@ set shiftwidth=2
 set softtabstop=2
 set cindent
 set copyindent
+set fileformat=unix
 
 set laststatus=2
 set clipboard=unnamedplus
@@ -91,6 +92,13 @@ set listchars=eol:¬,trail:█,nbsp:_,tab:»·
 
 set number
 set relativenumber
+
+set splitbelow
+set splitright
+
+set foldmethod=indent
+set foldlevel=99
+
 
 autocmd! bufwritepost init.vim source %
 
@@ -165,7 +173,7 @@ nnoremap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" 
 " -- git
 nnoremap <F8> :call vimterm#exec('git add ' . expand('%') . ' && git status')<CR>
 nnoremap <F9> :call vimterm#exec('echo "commit message: " && read commit_message && echo "\"$commit_message\"" \| xargs git commit -m')<CR>
-nnoremap <F10> :call vimterm#exec('git push')<CR>
+nnoremap <F10> :call vimterm#exec('echo pushing to git && git push')<CR>
 
 " -- Terminal movement
 tnoremap <Esc> <C-\><C-n>
@@ -173,6 +181,9 @@ imap <C-c> <Esc>:w<CR>
 tmap <C-c> <Esc>:w<CR>
 nnoremap <silent> <F7> :call vimterm#toggle()<CR>
 tnoremap <silent> <F7> <C-\><C-n><bar>:call vimterm#toggle()<CR>
+
+" -- Folding
+nnoremap <space> za
 
 " -- window switching
 tnoremap <A-h> <C-\><C-n><C-w>h
