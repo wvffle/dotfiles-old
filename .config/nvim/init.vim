@@ -197,6 +197,18 @@ let g:neomake_cpp_clang_maker = {
 
 " -- Compile
 let msg_compiling = 'echo "compiling ' . expand('%') . '"'
+function! FileExists(file)
+  return filereadable(getcwd() . "/" . a:file)
+endfunction
+function! CompileJS()
+  if FileExists("gruntfile.js") || FileExists("gruntfile.coffee")
+    call vimterm#exec(msg_compiling . ' && grunt')
+  else
+    call vimterm#exec(msg_compiling . ' && npm run build')
+  endif
+endfunction
+nmap <silent> <F4> :echo "No compiler detected"<CR>
+autocmd FileType javascript nmap <silent> <F4> :call CompileJS()
 autocmd FileType cpp nmap <silent> <F4> :call vimterm#exec(msg_compiling . ' && g++ -m32 -O2 -static -lm -std=c++11 -Wall -Wextra -Werror -Wno-long-long -Wno-variadic-macros -Wsign-compare -fexceptions ' . expand('%') . ' -o /tmp/' . expand('%:t:r') . '.out && echo "compiled without errors"') <CR>
   nnoremap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" && /tmp/' . expand('%:t:r') . '.out') <CR>
 
