@@ -15,6 +15,7 @@ call dein#add('Shougo/deoplete.nvim')
 call dein#add('Shougo/deoplete.nvim')
 call dein#add('Shougo/neosnippet.vim')
 call dein#add('wvffle/neosnippet-snippets')
+call dein#add('ternjs/tern_for_vim', { 'build': 'npm install' })
 
 " Airline
 call dein#add('vim-airline/vim-airline')
@@ -54,6 +55,7 @@ call dein#add('wavded/vim-stylus')
 
 " Linter
 call dein#add('neomake/neomake')
+call dein#add('airblade/vim-gitgutter')
 
 " Molokai theme
 call dein#add('tomasr/molokai')
@@ -114,15 +116,30 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_filetype_whitelist = { '*': 1 }
 let g:ycm_global_ycm_extra_conf = '~/.ycm.py'
 
-" -- Deocomplete
+" -- Deoplete
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#auto_complete_start_length = 1
 let g:deoplete#max_menu_width = 30
+if !exists('g:deoplete#omni#input_patterns')
+  let g:deoplete#omni#input_patterns = {}
+endif
+let g:deoplete#omni#functions = {}
+let g:deoplete#omni#functions.javascript = [
+  \ 'tern#Complete'
+\]
+let g:tern_show_argument_hints = 'on_hold'
+let g:tern_show_signature_in_pum = 1
+let g:tern#command = ['tern']
+let g:tern#arguments = ['--persistent']
 
+imap <C-Space> <C-x><C-o>
+imap <C-@> <C-Space>
 imap <expr> <Tab> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : pumvisible() ? deoplete#mappings#manual_complete() : "\<TAB>"
 imap <expr><CR> pumvisible() && neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<CR>"
 smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<TAB>"
 autocmd InsertLeave * NeoSnippetClearMarkers
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+autocmd FileType javascript setlocal omnifunc=tern#Complete
 
 " -- Airline
 let g:airline_powerline_fonts = 1
@@ -155,9 +172,9 @@ let delimitMate_expand_space = 1
 "let backspace = 2
 
 " -- Neomake
-autocmd! BufWritePost * Neomake
-autocmd! VimEnter * Neomake
+autocmd! VimEnter,BufReadPost,BufWritePost * Neomake
 let g:neomake_cpp_enabled_makers = ["gcc"]
+let g:neomake_highlight_lines = 1
 let g:neomake_cpp_clang_maker = {
   \ 'std':'c++11',
   \ 'args': ['-fsyntax-only', '-Wall', '-Wextra'],
@@ -169,14 +186,22 @@ nnoremap <silent> <F4> :call vimterm#exec('echo "compiling ' . expand('%') . '" 
   nnoremap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" && /tmp/' . expand('%:t:r') . '.out') <CR>
 
 " -- git
-nnoremap <F8> :call vimterm#exec('git add ' . expand('%') . ' && git status')<CR>
-nnoremap <F9> :call vimterm#exec('echo "commit message: " && read commit_message && echo "\"$commit_message\"" \| xargs git commit -m')<CR>
+function! Commit()
+  if neomake#statusline#LoclistCounts() == {}
+    call vimterm#exec('echo "commiting ' . expand('%') . '" && git add ' . expand('%') . ' && git status -s')
+  else
+    call vimterm#exec('echo "\033[0;31mcannot commit ' . expand('%') . ' due to errors"')
+  endif
+endfunction
+nnoremap <F8> :call Commit()<CR>
+nnoremap <F9> :call vimterm#exec('echo "commit message: " && read message && echo "\"$message\"" \| xargs git commit -m')<CR>
 nnoremap <F10> :call vimterm#exec('echo pushing to git && git push')<CR>
 
 " -- Terminal movement
 tnoremap <Esc> <C-\><C-n>
 imap <C-c> <Esc>:w<CR>
-tmap <C-c> <Esc>:w<CR>
+tmap <C-c> <Esc><CR>
+nmap <C-c> :w<CR>
 nnoremap <silent> <F7> :call vimterm#toggle()<CR>
 tnoremap <silent> <F7> <C-\><C-n><bar>:call vimterm#toggle()<CR>
 
@@ -213,3 +238,6 @@ nnoremap <Right> <NOP>
 
 " -- Syntax
 hi LineNr ctermfg=236 ctermbg=233
+hi SignColumn ctermbg=233
+hi Pmenu ctermbg=236
+hi PmenuSel ctermfg=117 ctermbg=234
