@@ -52,6 +52,7 @@ call dein#add('plasticboy/vim-markdown')
 call dein#add('kchmck/vim-coffee-script')
 call dein#add('digitaltoad/vim-pug')
 call dein#add('wavded/vim-stylus')
+call dein#add('othree/yajs.vim')
 
 " Linter
 call dein#add('neomake/neomake')
@@ -137,6 +138,19 @@ imap <C-@> <C-Space>
 imap <expr> <Tab> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : pumvisible() ? deoplete#mappings#manual_complete() : "\<TAB>"
 imap <expr><CR> pumvisible() && neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<CR>"
 smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<TAB>"
+function! Complete()
+  if index([ "js", "coffee", "cpp" ], expand('%:e')) >= 0
+    if getline('.')[col('.')-2] == '.'
+      call feedkeys("\<C-x>\<C-o>")
+    endif
+  endif
+  if index([ "cpp" ], expand('%:e')) >= 0
+    if getline('.')[col('.')-3] == '-' && getline('.')[col('.')-2] == '>'
+      call feedkeys("\<C-x>\<C-o>")
+    endif
+  endif
+endfunction
+autocmd CursorMovedI  * call Complete()
 autocmd InsertLeave * NeoSnippetClearMarkers
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 autocmd FileType javascript setlocal omnifunc=tern#Complete
@@ -181,8 +195,9 @@ let g:neomake_cpp_clang_maker = {
   \ 'stdlib':'libc++'
 \ }
 
-" -- Compile cpp
-nnoremap <silent> <F4> :call vimterm#exec('echo "compiling ' . expand('%') . '" && g++ -m32 -O2 -static -lm -std=c++11 -Wall -Wextra -Werror -Wno-long-long -Wno-variadic-macros -Wsign-compare -fexceptions ' . expand('%') . ' -o /tmp/' . expand('%:t:r') . '.out && echo "compiled without errors"') <CR>
+" -- Compile
+let msg_compiling = 'echo "compiling ' . expand('%') . '"'
+autocmd FileType cpp nmap <silent> <F4> :call vimterm#exec(msg_compiling . ' && g++ -m32 -O2 -static -lm -std=c++11 -Wall -Wextra -Werror -Wno-long-long -Wno-variadic-macros -Wsign-compare -fexceptions ' . expand('%') . ' -o /tmp/' . expand('%:t:r') . '.out && echo "compiled without errors"') <CR>
   nnoremap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" && /tmp/' . expand('%:t:r') . '.out') <CR>
 
 " -- git
