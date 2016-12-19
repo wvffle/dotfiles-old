@@ -197,6 +197,7 @@ function! Colon()
   endif
   return ';'
 endfunction
+inoremap <A-;> <End>
 imap ; <C-R>=Colon()<CR>
 
 function! Cr()
@@ -217,9 +218,6 @@ function! Cr()
   endif
 endfunction
 imap <CR> <C-R>=Cr()<CR>
-
-function! EscapeBrackets()
-endfunction
 
 " -- Neomake
 autocmd! VimEnter,BufReadPost,BufWritePost * Neomake
