@@ -16,6 +16,7 @@ call dein#add('Shougo/deoplete.nvim')
 call dein#add('Shougo/neosnippet.vim')
 call dein#add('wvffle/neosnippet-snippets')
 call dein#add('ternjs/tern_for_vim', { 'build': 'npm install' })
+call dein#add('zchee/deoplete-clang')
 
 " Airline
 call dein#add('vim-airline/vim-airline')
@@ -120,10 +121,13 @@ let g:ycm_global_ycm_extra_conf = '~/.ycm.py'
 " -- Deoplete
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#auto_complete_start_length = 1
+let g:deoplete#file#enable_buffer_path = 1
 let g:deoplete#max_menu_width = 30
 if !exists('g:deoplete#omni#input_patterns')
   let g:deoplete#omni#input_patterns = {}
 endif
+let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
+let g:deoplete#sources#clang#clang_header = '/usr/include/c++/6.2.1'
 let g:deoplete#omni#functions = {}
 let g:deoplete#omni#functions.javascript = [
   \ 'tern#Complete'
