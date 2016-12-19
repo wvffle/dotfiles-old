@@ -140,7 +140,6 @@ let g:tern#arguments = ['--persistent']
 imap <C-Space> <C-x><C-o>
 imap <C-@> <C-Space>
 imap <expr> <Tab> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : pumvisible() ? deoplete#mappings#manual_complete() : "\<TAB>"
-imap <expr><CR> pumvisible() && neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<CR>"
 smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<TAB>"
 function! Complete()
   if index([ "js", "coffee", "cpp" ], expand('%:e')) >= 0
@@ -149,7 +148,7 @@ function! Complete()
     endif
   endif
   if index([ "cpp" ], expand('%:e')) >= 0
-    if getline('.')[col('.')-3] == '-' && getline('.')[col('.')-2] == '>'
+    if getline('.')[col('.')-3:col('.')-2] == '->'
       call feedkeys("\<C-x>\<C-o>")
     endif
   endif
@@ -188,6 +187,39 @@ let delimitMate_expand_cr = 1
 let delimitMate_expand_space = 1
 "let delimitMate_jump_expansion = 2
 "let backspace = 2
+
+" -- Easier insert navigation
+function! Colon()
+  if getline('.')[col('.')-1:-1] =~ ')$'
+    return "\<End>;"
+  elseif getline('.')[col('.')-1] == ';'
+    return "\<Right>"
+  endif
+  return ';'
+endfunction
+imap ; <C-R>=Colon()<CR>
+
+function! Cr()
+  echo getline('.')[col('.')-2:col('.')-1]
+  if pumvisible()
+    if neosnippet#expandable()
+      return "\<Plug>(neosnippet_expand)"
+    else
+      " add omni complete
+      return "\<CR>"
+    endif
+  else
+    if getline('.')[col('.')-2:col('.')-1] == '{}'
+      return "\<CR>\<Esc>O\<Tab>"
+    else
+      return "\<CR>"
+    endif
+  endif
+endfunction
+imap <CR> <C-R>=Cr()<CR>
+
+function! EscapeBrackets()
+endfunction
 
 " -- Neomake
 autocmd! VimEnter,BufReadPost,BufWritePost * Neomake
