@@ -16,6 +16,7 @@ call dein#add('Shougo/deoplete.nvim')
 call dein#add('Shougo/neosnippet.vim')
 call dein#add('wvffle/neosnippet-snippets')
 call dein#add('ternjs/tern_for_vim', { 'build': 'npm install' })
+call dein#add('othree/jspc.vim')
 call dein#add('zchee/deoplete-clang')
 
 " Airline
@@ -54,6 +55,7 @@ call dein#add('kchmck/vim-coffee-script')
 call dein#add('digitaltoad/vim-pug')
 call dein#add('wavded/vim-stylus')
 call dein#add('othree/yajs.vim')
+call dein#add('othree/html5.vim')
 
 " Linter
 call dein#add('neomake/neomake')
@@ -77,6 +79,7 @@ endif
 colorscheme molokai
 let t_Co = 256
 set background=dark
+set cursorline
 
 set ttimeout
 set ttimeoutlen=50
@@ -130,7 +133,8 @@ let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/include/c++/6.2.1'
 let g:deoplete#omni#functions = {}
 let g:deoplete#omni#functions.javascript = [
-  \ 'tern#Complete'
+  \ 'tern#Complete',
+  \ 'jspc#omni'
 \]
 let g:tern_show_argument_hints = 'on_hold'
 let g:tern_show_signature_in_pum = 1
@@ -139,16 +143,23 @@ let g:tern#arguments = ['--persistent']
 
 imap <C-Space> <C-x><C-o>
 imap <C-@> <C-Space>
+imap <C-j> <C-N>
+imap <C-k> <C-P>
 imap <expr> <Tab> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : pumvisible() ? deoplete#mappings#manual_complete() : "\<TAB>"
 smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<TAB>"
 function! Complete()
+  if synIDattr(synIDtrans(synID(line("."), col("."), 1)), "name") == "String"
+    return
+  endif
   if index([ "js", "coffee", "cpp" ], expand('%:e')) >= 0
     if getline('.')[col('.')-2] == '.'
+      call feedkeys("\<C-x>\<C-o>")
       call feedkeys("\<C-x>\<C-o>")
     endif
   endif
   if index([ "cpp" ], expand('%:e')) >= 0
     if getline('.')[col('.')-3:col('.')-2] == '->'
+      call feedkeys("\<C-x>\<C-o>")
       call feedkeys("\<C-x>\<C-o>")
     endif
   endif
@@ -204,14 +215,15 @@ function! Cr()
   echo getline('.')[col('.')-2:col('.')-1]
   if pumvisible()
     if neosnippet#expandable()
-      return "\<Plug>(neosnippet_expand)"
+      call feedkeys("\<Plug>(neosnippet_expand)")
+      return ""
     else
       " add omni complete
       return "\<CR>"
     endif
   else
     if getline('.')[col('.')-2:col('.')-1] == '{}'
-      return "\<CR>\<Esc>O\<Tab>"
+      return "\<CR>\<Esc>O"
     else
       return "\<CR>"
     endif
@@ -244,7 +256,9 @@ endfunction
 nmap <silent> <F4> :echo "No compiler detected"<CR>
 autocmd FileType javascript nmap <silent> <F4> :call CompileJS()<CR>
 autocmd FileType cpp nmap <silent> <F4> :call vimterm#exec(g:msg_compiling . ' && g++ -m32 -O2 -static -lm -std=c++11 -Wall -Wextra -Werror -Wno-long-long -Wno-variadic-macros -Wsign-compare -fexceptions ' . expand('%') . ' -o /tmp/' . expand('%:t:r') . '.out && echo "compiled without errors"') <CR>
-  nnoremap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" && /tmp/' . expand('%:t:r') . '.out') <CR>
+
+autocmd FileType cpp nmap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" && /tmp/' . expand('%:t:r') . '.out') <CR>
+autocmd FileType javascript nmap <silent> <F5> :call vimterm#exec('npm run test')<CR>
 
 " -- git
 function! Commit()
@@ -283,6 +297,10 @@ inoremap <A-j> <C-\><C-n><C-w>j
 inoremap <A-k> <C-\><C-n><C-w>k
 inoremap <A-l> <C-\><C-n><C-w>l
 
+" -- Tab switching
+nnoremap <Tab> gt
+nnoremap <S-Tab> gT
+
 " -- Disable arrows
 inoremap <Up> <NOP>
 vnoremap <Up> <NOP>
@@ -302,3 +320,5 @@ hi LineNr ctermfg=236 ctermbg=233
 hi SignColumn ctermbg=233
 hi Pmenu ctermbg=236
 hi PmenuSel ctermfg=117 ctermbg=234
+hi CursorLine ctermbg=234
+hi CursorLineNr ctermbg=234
