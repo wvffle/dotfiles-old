@@ -27,6 +27,8 @@ call dein#add('vim-airline/vim-airline-themes')
 call dein#add('scrooloose/nerdtree')
 call dein#add('jistr/vim-nerdtree-tabs')
 call dein#add('xuyuanp/nerdtree-git-plugin')
+call dein#add('ryanoasis/vim-devicons')
+call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
 
 " vimterm
 call dein#add('wvffle/vimterm')
@@ -106,20 +108,12 @@ set splitright
 set foldmethod=indent
 set foldlevel=99
 
+set scrolloff=6
+
 
 autocmd! bufwritepost init.vim source %
 
 " -- Plugin Configs
-
-" -- YouCompleteMe
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_use_ultisnips_completer = 1
-let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_complete_in_comments = 1
-let g:ycm_complete_in_strings = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_filetype_whitelist = { '*': 1 }
-let g:ycm_global_ycm_extra_conf = '~/.ycm.py'
 
 " -- Deoplete
 let g:deoplete#enable_at_startup = 1
@@ -180,6 +174,7 @@ let g:nerdtree_tabs_open_on_console_startup=1
 let g:nerdtree_tabs_autofind=1
 let NERDTreeMapOpenInTab='<Enter>' " see: jistr/vim-nerdtree-tabs/issues/47#issuecomment-57338002
 map <F2> :NERDTreeTabsToggle<CR>
+autocmd FileType nerdtree setlocal nolist
 
 " -- Tagbar
 let g:tagbar_left = 1
@@ -240,6 +235,8 @@ let g:neomake_cpp_clang_maker = {
   \ 'args': ['-fsyntax-only', '-Wall', '-Wextra'],
   \ 'stdlib':'libc++'
 \ }
+let g:neomake_javascript_eslint_exe = system('PATH=$(npm bin):$PATH && which eslint | tr -d "\n"')
+let g:neomake_javascript_enabled_makers = ['eslint', 'jscs']
 
 " -- Compile
 let g:msg_compiling = 'echo "compiling ' . expand('%') . '"'
@@ -258,7 +255,7 @@ autocmd FileType javascript nmap <silent> <F4> :call CompileJS()<CR>
 autocmd FileType cpp nmap <silent> <F4> :call vimterm#exec(g:msg_compiling . ' && g++ -m32 -O2 -static -lm -std=c++11 -Wall -Wextra -Werror -Wno-long-long -Wno-variadic-macros -Wsign-compare -fexceptions ' . expand('%') . ' -o /tmp/' . expand('%:t:r') . '.out && echo "compiled without errors"') <CR>
 
 autocmd FileType cpp nmap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" && /tmp/' . expand('%:t:r') . '.out') <CR>
-autocmd FileType javascript nmap <silent> <F5> :call vimterm#exec('npm run test')<CR>
+autocmd FileType javascript nmap <silent> <F5> :call vimterm#exec('npm run -s test \|\| electron . \|\| node .')<CR>
 
 " -- git
 function! Commit()
@@ -275,7 +272,6 @@ nnoremap <F10> :call vimterm#exec('echo pushing to git && git push')<CR>
 " -- Terminal movement
 tnoremap <Esc> <C-\><C-n>
 imap <C-c> <Esc>:w<CR>
-tmap <C-c> <Esc><CR>
 nmap <C-c> :w<CR>
 nnoremap <silent> <F7> :call vimterm#toggle()<CR>
 tnoremap <silent> <F7> <C-\><C-n><bar>:call vimterm#toggle()<CR>
