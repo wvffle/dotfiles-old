@@ -1,0 +1,11 @@
+#!/bin/bash
+if [ "$1" != "" ]
+then
+  echo $1 > /tmp/GAME
+else
+  echo "exit" > /tmp/GAME
+  ~/.scripts/gamelist.js
+  GAME=`cat /tmp/GAME`
+  echo -ne "\033]0;$GAME\007"
+  $GAME
+fi
