@@ -2,7 +2,15 @@
 var inquirer = require('inquirer');
 var exec = require('child_process').execSync;
 
-var games = [ 'vms-empire', 'curseofwar' ];
+var games = [
+  'vms-empire',
+  'curseofwar',
+  'ninvaders',
+  'bs',
+  'vitetris',
+  '### GUI GAMES ###',
+  'dwarffortress'
+];
 
 inquirer.prompt([{
   type: 'list',
@@ -10,5 +18,5 @@ inquirer.prompt([{
   message: 'What do you want to play?',
   choices: games,
 }]).then(function(answers) {
-  console.log(exec('./play ' + answers.game).toString());
+  console.log(exec('~/.scripts/play ' + answers.game).toString());
 });
