@@ -8,8 +8,8 @@ call dein#begin('/home/waff/.config/nvim/dein')
 " Let dein manage dein
 call dein#add('Shougo/deoplete.nvim')
 
-" You Complete Me
-"call dein#add('Valloric/YouCompleteMe')
+" Buffers
+call dein#add('qpkorr/vim-bufkill')
 
 " Deocomplete
 call dein#add('Shougo/deoplete.nvim')
@@ -50,7 +50,6 @@ call dein#add('godlygeek/tabular')
 
 " Surround.vim
 call dein#add('tpope/vim-surround')
-
 " Syntax
 call dein#add('plasticboy/vim-markdown')
 call dein#add('kchmck/vim-coffee-script')
@@ -148,12 +147,10 @@ function! Complete()
   if index([ "js", "coffee", "cpp" ], expand('%:e')) >= 0
     if getline('.')[col('.')-2] == '.'
       call feedkeys("\<C-x>\<C-o>")
-      call feedkeys("\<C-x>\<C-o>")
     endif
   endif
   if index([ "cpp" ], expand('%:e')) >= 0
     if getline('.')[col('.')-3:col('.')-2] == '->'
-      call feedkeys("\<C-x>\<C-o>")
       call feedkeys("\<C-x>\<C-o>")
     endif
   endif
@@ -293,9 +290,17 @@ inoremap <A-j> <C-\><C-n><C-w>j
 inoremap <A-k> <C-\><C-n><C-w>k
 inoremap <A-l> <C-\><C-n><C-w>l
 
-" -- Tab switching
-nnoremap <Tab> gt
-nnoremap <S-Tab> gT
+" -- Buffer switching
+nnoremap <Tab> :bn<cr>
+nnoremap <S-Tab> :bp<cr>
+function! Quit() abort
+  if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+    q
+  else
+    BD
+  endif
+endfunction
+nnoremap qq :call Quit()<cr>
 
 " -- Disable arrows
 inoremap <Up> <NOP>
