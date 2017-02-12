@@ -27,7 +27,7 @@ call dein#add('vim-airline/vim-airline-themes')
 call dein#add('scrooloose/nerdtree')
 call dein#add('jistr/vim-nerdtree-tabs')
 call dein#add('xuyuanp/nerdtree-git-plugin')
-call dein#add('ryanoasis/vim-devicons')
+"call dein#add('ryanoasis/vim-devicons')
 call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
 
 " vimterm
@@ -77,7 +77,7 @@ endif
 
 " -- Neovim Configs
 
-colorscheme molokai
+"colorscheme molokai
 let t_Co = 256
 set background=dark
 set cursorline
@@ -163,15 +163,49 @@ autocmd FileType javascript setlocal omnifunc=tern#Complete
 " -- Airline
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme="murmur"
+let g:airline_theme="zenburn"
 
 " -- NERDTree
 let g:NERDTreeWinPos = "right"
+let g:NERDTreeDirArrowExpandable = '+'
+let g:NERDTreeDirArrowCollapsible = '-'
 let g:nerdtree_tabs_open_on_console_startup=1
 let g:nerdtree_tabs_autofind=1
-let NERDTreeMapOpenInTab='<Enter>' " see: jistr/vim-nerdtree-tabs/issues/47#issuecomment-57338002
+let g:NERDTreeIgnore=['node_modules$[[dir]]']
+let g:NERDTreeMinimalUI=1
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "*",
+    \ "Staged"    : "+",
+    \ "Untracked" : "o",
+    \ "Renamed"   : ">",
+    \ "Unmerged"  : "=",
+    \ "Deleted"   : "-",
+    \ "Dirty"     : "x",
+    \ "Clean"     : "v",
+    \ "Unknown"   : "?"
+    \ }
 map <F2> :NERDTreeTabsToggle<CR>
 autocmd FileType nerdtree setlocal nolist
+
+function! PanelOpen() abort
+  :TagbarOpen
+  wincmd h
+  let a:tagbar=bufnr('%')
+  :TagbarClose
+  :GundoShow
+  sp
+  wincmd k
+  exec 'buffer ' . a:tagbar
+  wincmd j
+  wincmd j
+  exec 'resize ' . g:vimterm_height
+  wincmd k
+  wincmd l
+endfunction
+function! PanelClose() abort
+  :GundoHide
+  :TagbarClose
+endfunction
 
 " -- Tagbar
 let g:tagbar_left = 1
@@ -300,7 +334,7 @@ function! Quit() abort
     BD
   endif
 endfunction
-nnoremap qq :call Quit()<cr>
+nnoremap <silent> qq :call Quit()<cr>
 
 " -- Disable arrows
 inoremap <Up> <NOP>
@@ -317,9 +351,11 @@ vnoremap <Right> <NOP>
 nnoremap <Right> <NOP>
 
 " -- Syntax
-hi LineNr ctermfg=236 ctermbg=233
+hi LineNr ctermfg=236 ctermbg=none
 hi SignColumn ctermbg=233
 hi Pmenu ctermbg=236
 hi PmenuSel ctermfg=117 ctermbg=234
 hi CursorLine ctermbg=234
 hi CursorLineNr ctermbg=234
+hi Normal ctermbg=none
+hi VertSplit ctermfg=234
