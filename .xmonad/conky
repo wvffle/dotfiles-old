@@ -5,7 +5,7 @@ update_interval 1
 double_buffer yes
 
 TEXT
-^fg(\#444444)${execi 1 python3 $HOME/.xmonad/scripts/song.py}
+^fg(\#444444)${execi 1 python3 $HOME/.xmonad/scripts/song.py}\
 ^fg(\#F7441C)  ///  \
 ^fg(\#444444)^i($HOME/.dzen2/mem.xbm) ${memperc}%\
 ^fg(\#F7441C)  ///  \

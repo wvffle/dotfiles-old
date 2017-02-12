@@ -7,8 +7,7 @@ from gi.repository import Playerctl, GLib
 
 player = Playerctl.Player()
 
-sys.stdout.flush()
-sys.stdout.write('{0} - {1} ({2})'.format(player.get_artist(), player.get_title(), player.get_album()))
-sys.stdout.flush()
-
-#GLib.MainLoop().run()
+try:
+    sys.stdout.write('{0} - {1} ({2})'.format(player.get_artist(), player.get_title(), player.get_album()))
+except:
+    sys.stdout.write('no music')
