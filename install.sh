@@ -6,11 +6,11 @@ do
   then
 
     echo "installing module $module..."
-    module=$module $module/install.sh
+    module=$module bash $module/install.sh
 
   else
 
-    if [ -d $file ]
+    if [ -d $module ]
     then
 
       echo "installing module $module..."
