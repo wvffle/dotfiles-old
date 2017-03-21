@@ -2,8 +2,8 @@
 if &compatible
   set nocompatible " Be iMproved
 endif
-set runtimepath+=/home/waff/.config/nvim/dein/repos/github.com/Shougo/dein.vim
-call dein#begin('/home/waff/.config/nvim/dein')
+set runtimepath+=~/.config/nvim/dein/repos/github.com/Shougo/dein.vim
+call dein#begin('~/.config/nvim/dein')
 
 " Let dein manage dein
 call dein#add('Shougo/deoplete.nvim')

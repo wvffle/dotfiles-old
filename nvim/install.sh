@@ -3,10 +3,17 @@
 dir=~/.config/$module
 mkdir -p $dir
 
-for f in $module/*
-do
-  file=${f##*/}
-  [[ $file =~ ^install.sh$ ]] && continue
+function create_link {
+  ln -s $PWD/$module/$1 $dir/$1
+}
 
-  ln -s $PWD/$f $dir/$file
-done
+function escape {
+  echo "$1" | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g'
+}
+
+function replace {
+  sed -i "s/$(escape $1)/$(escape $2)/g" $dir/$3
+}
+
+create_link init.vim
+replace ~\/ $HOME/ init.vim
