@@ -15,7 +15,10 @@ function replace {
   sed -i "s/$(escape $1)/$(escape $2)/g" $dir/$3
 }
 
+function clone {
+  git clone https://github.com/$1 $dir/$2
+}
+
 create_link init.vim
 replace ~\/ $HOME/ init.vim
-
-git clone https://github.com/Shougo/dein.vim $dir/dein/repos/github.com/Shougo/dein.vim
+clone Shougo/dein.vim dein/repos/github.com/Shougo/dein.vim
