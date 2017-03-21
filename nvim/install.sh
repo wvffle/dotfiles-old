@@ -17,3 +17,5 @@ function replace {
 
 create_link init.vim
 replace ~\/ $HOME/ init.vim
+
+git clone https://github.com/Shougo/dein.vim $dir/dein/repos/github.com/Shougo/dein.vim
