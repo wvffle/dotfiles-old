@@ -35,7 +35,7 @@ startup = do
   spawnOnce "feh --bg-fill ~/Desktop/wallpaper.jpg"
   spawnOnce "xrdb ~/.Xresources"
   spawnOnce "xmodmap ~/.Xmodmap"
-  spawnOnce "compton -b --config ~/.config/compton/compton.conf &"
+  spawnOnce "compton -b --config ~/.config/compton/compton.conf&"
   setDefaultCursor xC_left_ptr
 
 main = do
