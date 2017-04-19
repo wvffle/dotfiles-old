@@ -22,3 +22,9 @@ function clone {
 create_link init.vim
 replace ~\/ $HOME/ init.vim
 clone Shougo/dein.vim dein/repos/github.com/Shougo/dein.vim
+
+if which programname > /dev/null
+then
+  sudo pacman -S nodejs
+fi
+npm install -g tern

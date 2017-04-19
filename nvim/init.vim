@@ -2,68 +2,48 @@
 if &compatible
   set nocompatible " Be iMproved
 endif
-set runtimepath+=~/.config/nvim/dein/repos/github.com/Shougo/dein.vim
-call dein#begin('~/.config/nvim/dein')
+set runtimepath+=$HOME/.config/nvim/dein/repos/github.com/Shougo/dein.vim
+call dein#begin(expand('~/.config/nvim/dein'))
 
 " Let dein manage dein
 call dein#add('Shougo/deoplete.nvim')
 
-" Buffers
-call dein#add('qpkorr/vim-bufkill')
-
-" Deocomplete
-call dein#add('Shougo/deoplete.nvim')
-call dein#add('Shougo/neosnippet.vim')
-call dein#add('wvffle/neosnippet-snippets')
-call dein#add('ternjs/tern_for_vim', { 'build': 'npm install' })
-call dein#add('othree/jspc.vim')
-call dein#add('zchee/deoplete-clang')
-
-" Airline
-call dein#add('vim-airline/vim-airline')
-call dein#add('vim-airline/vim-airline-themes')
-
-" NERDTree
-call dein#add('scrooloose/nerdtree')
-call dein#add('jistr/vim-nerdtree-tabs')
-call dein#add('xuyuanp/nerdtree-git-plugin')
-"call dein#add('ryanoasis/vim-devicons')
-call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
-
-" vimterm
-call dein#add('wvffle/vimterm')
-
-" Tagbar
-call dein#add('majutsushi/tagbar')
-
-" Cursor
-call dein#add('terryma/vim-multiple-cursors')
-
-" Graph undo
-call dein#add('sjl/gundo.vim')
-
-" delimitMate
-call dein#add('Raimondi/delimitMate')
-
-" Tabularize
-call dein#add('godlygeek/tabular')
-
-" Surround.vim
-call dein#add('tpope/vim-surround')
-" Syntax
-call dein#add('plasticboy/vim-markdown')
-call dein#add('kchmck/vim-coffee-script')
+" Colours
+call dein#add('mhartington/oceanic-next')
+call dein#add('pangloss/vim-javascript')
+call dein#add('othree/html5.vim')
 call dein#add('digitaltoad/vim-pug')
 call dein#add('wavded/vim-stylus')
-call dein#add('othree/yajs.vim')
-call dein#add('othree/html5.vim')
+call dein#add('clavery/vim-signcolor')
+call dein#add('wvffle/vim-css-color')
+call dein#add('ryanoasis/vim-devicons')
+" have to fix conceal
+"call dein#add('Yggdroot/indentLine')
+
+" Completion
+call dein#add('Shougo/deoplete.nvim')
+call dein#add('ternjs/tern_for_vim', {'build': 'npm install'})
+call dein#add('carlitux/deoplete-ternjs', {'on_ft': 'javascript'})
+call dein#add('othree/jspc.vim')
+call dein#add('Shougo/neosnippet.vim')
+call dein#add('wvffle/neosnippet-snippets')
 
 " Linter
 call dein#add('neomake/neomake')
 call dein#add('airblade/vim-gitgutter')
 
-" Molokai theme
-call dein#add('tomasr/molokai')
+" Functionality
+call dein#add('qpkorr/vim-bufkill')
+call dein#add('bling/vim-bufferline')
+call dein#add('terryma/vim-multiple-cursors')
+call dein#add('Raimondi/delimitMate')
+call dein#add('tpope/vim-surround')
+call dein#add('wvffle/vimterm')
+
+" NERDTree
+call dein#add('scrooloose/nerdtree')
+call dein#add('xuyuanp/nerdtree-git-plugin')
+call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
 
 call dein#end()
 
@@ -75,11 +55,12 @@ if dein#check_install()
   call dein#install()
 endif
 
-" -- Neovim Configs
-
-"colorscheme molokai
-let t_Co = 256
+set t_Co=256
+set t_8f=\[[38;2;%lu;%lu;%lum
+set t_8b=\[[48;2;%lu;%lu;%lum
+set termguicolors
 set background=dark
+colorscheme OceanicNext
 set cursorline
 
 set ttimeout
@@ -94,9 +75,11 @@ set fileformat=unix
 
 set laststatus=2
 set clipboard=unnamedplus
+set noswapfile
+set undofile
 
 set list
-set listchars=eol:¬,trail:█,nbsp:_,tab:»·
+set listchars=eol:¬,trail:█,nbsp:_,tab:»·,nbsp:~
 
 set number
 set relativenumber
@@ -110,132 +93,39 @@ set foldlevel=99
 set scrolloff=6
 
 
-autocmd! bufwritepost init.vim source %
+" global {{{
+inoremap <silent> <c-c> <c-[>
+nmap <silent> <c-c> :silent write<cr>
+" }}}
 
-" -- Plugin Configs
+" Syntax {{{
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_flow = 1
+let g:javascript_conceal_function             = "ƒ"
+let g:javascript_conceal_null                 = "ø"
+let g:javascript_conceal_this                 = "@"
+let g:javascript_conceal_return               = "⇚"
+let g:javascript_conceal_undefined            = "¿"
+let g:javascript_conceal_NaN                  = "ℕ"
+let g:javascript_conceal_prototype            = "¶"
+let g:javascript_conceal_static               = "•"
+let g:javascript_conceal_super                = "Ω"
+let g:javascript_conceal_arrow_function       = "⇒"
+set conceallevel=1
 
-" -- Deoplete
+autocmd FileType stylus if get(b:, 'is_signs_set', 0) == 0 | call signcolor#toggle_signs_for_colors_in_buffer() | endif
+autocmd FileType javascript setlocal foldmethod=syntax
+" }}}
+
+" deoplete {{{
+set completeopt=noinsert,menu,menuone
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_start_length = 1
 let g:deoplete#file#enable_buffer_path = 1
-let g:deoplete#max_menu_width = 30
-if !exists('g:deoplete#omni#input_patterns')
-  let g:deoplete#omni#input_patterns = {}
-endif
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/include/c++/6.2.1'
-let g:deoplete#omni#functions = {}
+let g:deoplete#omni#functions = get(g:, 'deoplete#omni#functions', {})
 let g:deoplete#omni#functions.javascript = [
   \ 'tern#Complete',
   \ 'jspc#omni'
 \]
-let g:tern_show_argument_hints = 'on_hold'
-let g:tern_show_signature_in_pum = 1
-let g:tern#command = ['tern']
-let g:tern#arguments = ['--persistent']
-
-imap <C-Space> <C-x><C-o>
-imap <C-@> <C-Space>
-imap <C-j> <C-N>
-imap <C-k> <C-P>
-imap <expr> <Tab> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : pumvisible() ? deoplete#mappings#manual_complete() : "\<TAB>"
-smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<TAB>"
-function! Complete()
-  if synIDattr(synIDtrans(synID(line("."), col("."), 1)), "name") == "String"
-    return
-  endif
-  if index([ "js", "coffee", "cpp" ], expand('%:e')) >= 0
-    if getline('.')[col('.')-2] == '.'
-      call feedkeys("\<C-x>\<C-o>")
-    endif
-  endif
-  if index([ "cpp" ], expand('%:e')) >= 0
-    if getline('.')[col('.')-3:col('.')-2] == '->'
-      call feedkeys("\<C-x>\<C-o>")
-    endif
-  endif
-endfunction
-autocmd CursorMovedI  * call Complete()
-autocmd InsertLeave * NeoSnippetClearMarkers
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-autocmd FileType javascript setlocal omnifunc=tern#Complete
-
-" -- Airline
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme="zenburn"
-
-" -- NERDTree
-let g:NERDTreeWinPos = "right"
-let g:NERDTreeDirArrowExpandable = '+'
-let g:NERDTreeDirArrowCollapsible = '-'
-let g:nerdtree_tabs_open_on_console_startup=1
-let g:nerdtree_tabs_autofind=1
-let g:NERDTreeIgnore=['node_modules$[[dir]]']
-let g:NERDTreeMinimalUI=1
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "*",
-    \ "Staged"    : "+",
-    \ "Untracked" : "o",
-    \ "Renamed"   : ">",
-    \ "Unmerged"  : "=",
-    \ "Deleted"   : "-",
-    \ "Dirty"     : "x",
-    \ "Clean"     : "v",
-    \ "Unknown"   : "?"
-    \ }
-map <F2> :NERDTreeTabsToggle<CR>
-autocmd FileType nerdtree setlocal nolist
-
-function! PanelOpen() abort
-  :TagbarOpen
-  wincmd h
-  let a:tagbar=bufnr('%')
-  :TagbarClose
-  :GundoShow
-  sp
-  wincmd k
-  exec 'buffer ' . a:tagbar
-  wincmd j
-  wincmd j
-  exec 'resize ' . g:vimterm_height
-  wincmd k
-  wincmd l
-endfunction
-function! PanelClose() abort
-  :GundoHide
-  :TagbarClose
-endfunction
-
-" -- Tagbar
-let g:tagbar_left = 1
-let g:tagbar_width = 30
-let g:tagbar_compact = 1
-nnoremap <F6> :TagbarToggle<CR>
-
-" -- Graph undo
-let g:gundo_return_on_revert=0
-let g:gundo_width=30
-let g:gundo_help=0
-nnoremap <F3> :GundoToggle<CR>
-
-" -- delimitMate
-let delimitMate_expand_cr = 1
-let delimitMate_expand_space = 1
-"let delimitMate_jump_expansion = 2
-"let backspace = 2
-
-" -- Easier insert navigation
-function! Colon()
-  if getline('.')[col('.')-1:-1] =~ ')$'
-    return "\<End>;"
-  elseif getline('.')[col('.')-1] == ';'
-    return "\<Right>"
-  endif
-  return ';'
-endfunction
-inoremap <A-;> <End>
-imap ; <C-R>=Colon()<CR>
 
 function! Cr()
   echo getline('.')[col('.')-2:col('.')-1]
@@ -245,20 +135,37 @@ function! Cr()
       return ""
     else
       " add omni complete
-      return "\<CR>"
+      return "\<cr>"
     endif
   else
     if getline('.')[col('.')-2:col('.')-1] == '{}'
-      return "\<CR>\<Esc>O"
+      return "\<cr>\<Esc>O"
     else
-      return "\<CR>"
+      return "\<cr>"
     endif
   endif
 endfunction
-imap <CR> <C-R>=Cr()<CR>
 
-" -- Neomake
-autocmd! VimEnter,BufReadPost,BufWritePost * Neomake
+imap <cr> <c-r>=Cr()<cr>
+imap <C-Space> <C-x><C-o>
+imap <silent><expr> <C-Space> deoplete#mappings#manual_complete()
+
+inoremap <silent> <expr> <Tab> pumvisible() ? deoplete#mappings#manual_complete() : '<Tab>'
+inoremap <silent> <S-Tab> <C-P>
+inoremap <silent> <C-J> <C-N>
+inoremap <silent> <C-K> <C-P>
+
+let g:tern_request_timeout = 1
+let g:tern_request_timeout = 6000
+let g:tern_show_signature_in_pum = 1
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
+
+autocmd FileType javascript setlocal omnifunc=tern#Complete
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+" }}}
+
+" neomake {{{
 let g:neomake_cpp_enabled_makers = ["gcc"]
 let g:neomake_highlight_lines = 1
 let g:neomake_cpp_clang_maker = {
@@ -268,49 +175,23 @@ let g:neomake_cpp_clang_maker = {
 \ }
 let g:neomake_javascript_eslint_exe = system('PATH=$(npm bin):$PATH && which eslint | tr -d "\n"')
 let g:neomake_javascript_enabled_makers = ['eslint', 'jscs']
+" }}}
 
-" -- Compile
-let g:msg_compiling = 'echo "compiling ' . expand('%') . '"'
-function! FileExists(file)
-  return filereadable(getcwd() . "/" . a:file)
-endfunction
-function! CompileJS()
-  if FileExists("gruntfile.js") || FileExists("gruntfile.coffee")
-    call vimterm#exec(g:msg_compiling . ' && grunt')
-  else
-    call vimterm#exec(g:msg_compiling . ' && npm run build')
-  endif
-endfunction
-nmap <silent> <F4> :echo "No compiler detected"<CR>
-autocmd FileType javascript nmap <silent> <F4> :call CompileJS()<CR>
-autocmd FileType cpp nmap <silent> <F4> :call vimterm#exec(g:msg_compiling . ' && g++ -m32 -O2 -static -lm -std=c++11 -Wall -Wextra -Werror -Wno-long-long -Wno-variadic-macros -Wsign-compare -fexceptions ' . expand('%') . ' -o /tmp/' . expand('%:t:r') . '.out && echo "compiled without errors"') <CR>
+" statusline {{{
+fun! Symbol()
+  return WebDevIconsGetFileTypeSymbol()
+endfun
+set statusline=%=\ %{Symbol()}%t%m\ %=
+" }}}
 
-autocmd FileType cpp nmap <silent> <F5> :call vimterm#exec('echo "executing ' . expand('%') . '" && /tmp/' . expand('%:t:r') . '.out') <CR>
-autocmd FileType javascript nmap <silent> <F5> :call vimterm#exec('npm run -s test \|\| electron . \|\| node .')<CR>
+" style {{{
+hi! VertSplit guibg=none guifg=#343d46
+hi! StatusLine guibg=none
+hi! StatusLineNC guibg=none
+set fillchars+=vert:\▕,stlnc:\ ,stl:=
+" }}}
 
-" -- git
-function! Commit()
-  if neomake#statusline#LoclistCounts() == {}
-    call vimterm#exec('echo "commiting ' . expand('%') . '" && git add ' . expand('%') . ' && git status -s')
-  else
-    call vimterm#exec('echo "\033[0;31mcannot commit ' . expand('%') . ' due to errors"')
-  endif
-endfunction
-nnoremap <F8> :call Commit()<CR>
-nnoremap <F9> :call vimterm#exec('echo "commit message: " && read message && echo "\"$message\"" \| xargs git commit -m')<CR>
-nnoremap <F10> :call vimterm#exec('echo pushing to git && git push')<CR>
-
-" -- Terminal movement
-tnoremap <Esc> <C-\><C-n>
-imap <C-c> <Esc>:w<CR>
-nmap <C-c> :w<CR>
-nnoremap <silent> <F7> :call vimterm#toggle()<CR>
-tnoremap <silent> <F7> <C-\><C-n><bar>:call vimterm#toggle()<CR>
-
-" -- Folding
-nnoremap <space> za
-
-" -- window switching
+" window switching {{{
 tnoremap <A-h> <C-\><C-n><C-w>h
 tnoremap <A-j> <C-\><C-n><C-w>j
 tnoremap <A-k> <C-\><C-n><C-w>k
@@ -323,39 +204,105 @@ inoremap <A-h> <C-\><C-n><C-w>h
 inoremap <A-j> <C-\><C-n><C-w>j
 inoremap <A-k> <C-\><C-n><C-w>k
 inoremap <A-l> <C-\><C-n><C-w>l
+" }}}}
 
-" -- Buffer switching
-nnoremap <Tab> :bn<cr>
-nnoremap <S-Tab> :bp<cr>
-function! Quit() abort
-  if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
-    q
+" addons {{{
+fun! DeleteTrailingWS()
+  exe "normal mz"
+  %s/\s\+$//ge
+  exe "normal `z"
+endfun
+augroup whitespace
+  autocmd!
+  autocmd BufWrite * :call DeleteTrailingWS()
+augroup END
+" }}}
+
+" IDE functionality {{{
+
+let mapleader = ","
+let s:tree = 1
+let s:tree_side = 'right'
+let s:tree_size = 30
+
+let s:tags_side = 'left'
+
+let s:workspace = win_getid()
+
+let g:NERDTreeWinPos = s:tree_side
+let g:NERDTreeMinimalUI=1
+let g:NERDTreeWinSize = s:tree_size
+
+let delimitMate_expand_cr = 1
+let delimitMate_expand_space = 1
+
+fun! NerdBuf()
+  return get(t:, 'NERDTreeBufName', -1)
+endfun
+fun! NerdWin()
+  let a:res =  NerdBuf()
+  if a:res != -1
+    let a:res = bufwinnr(a:res)
+  endif
+  let s:tree_win = a:res
+  return a:res
+endfun
+
+fun! ChangeTab(pos)
+  let a:win = win_getid()
+  if a:win != s:workspace
+    call win_gotoid(s:workspace)
+  endif
+  if a:pos == 'h'
+    bprevious
+  elseif a:pos == 'l'
+    bnext
+  endif
+  if a:win != s:workspace
+    call win_gotoid(a:win)
+  endif
+endfun
+
+fun! Quit() abort
+  let a:win = win_getid()
+  if a:win != s:workspace
+    call win_gotoid(s:workspace)
+  endif
+  if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) <= 1
+    qa
   else
     BD
   endif
-endfunction
+  if a:win != s:workspace
+    call win_gotoid(a:win)
+  endif
+endfun
+
 nnoremap <silent> qq :call Quit()<cr>
+nnoremap <silent> <Tab> :call ChangeTab('l')<cr>
+nnoremap <silent> <S-Tab> :call ChangeTab('h')<cr>
+nnoremap <silent> <F4> :call vimterm#exec('g++ -o /tmp/out ' . expand('%')) <cr>
+nnoremap <silent> <F5> :call vimterm#exec('/tmp/out') <cr>
+nnoremap <leader>t :call vimterm#toggle()<cr>
+tnoremap <leader>t <c-\><c-n>:call vimterm#toggle()<cr>
 
-" -- Disable arrows
-inoremap <Up> <NOP>
-vnoremap <Up> <NOP>
-nnoremap <Up> <NOP>
-inoremap <Down> <NOP>
-vnoremap <Down> <NOP>
-nnoremap <Down> <NOP>
-inoremap <Left> <NOP>
-vnoremap <Left> <NOP>
-nnoremap <Left> <NOP>
-inoremap <Right> <NOP>
-vnoremap <Right> <NOP>
-nnoremap <Right> <NOP>
+augroup ide
+  autocmd!
+  autocmd VimEnter * if s:tree == 1 | NERDTree | let s:tree_win = NerdWin() | endif
+  autocmd VimEnter * call win_gotoid(s:workspace) | Neomake
+  autocmd TextChangedI,TextChanged * if win_getid() == s:workspace | Neomake | endif
+  autocmd TextChanged,InsertLeave * if win_getid() == s:workspace | Neomake | silent write | endif
+  " TODO: Try to direct edit command to workspace
+  autocmd BufHidden * if win_getid() == s:tree_win | q | NERDTree | endif
+augroup END
 
-" -- Syntax
-hi LineNr ctermfg=236 ctermbg=none
-hi SignColumn ctermbg=233
-hi Pmenu ctermbg=236
-hi PmenuSel ctermfg=117 ctermbg=234
-hi CursorLine ctermbg=234
-hi CursorLineNr ctermbg=234
-hi Normal ctermbg=none
-hi VertSplit ctermfg=234
+" }}}
+
+fun! PreSource()
+  let a:ntree = NerdWin()
+  if a:ntree != -1
+    NERDTreeClose
+  endif
+  return a:ntree
+endfun
+autocmd! BufWritePost init.vim let s:n = PreSource() | source % | if s:n != -1 | NERDTree | endif
