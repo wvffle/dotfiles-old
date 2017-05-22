@@ -1,29 +1,48 @@
 #!/bin/bash
 
-for module in *
-do
-  if [ -f $module/install.sh ]
-  then
+function install {
+  module=$1
 
+  [[ -f $module/install.sh ]] && {
     echo "installing module $module..."
     module=$module bash $module/install.sh
 
-  else
+    return
+  }
 
-    if [ -d $module ]
-    then
+  [[ -d $module ]] && {
+    echo "installing module $module..."
+    dir=~/.$module
+    mkdir -p $dir
 
-      echo "installing module $module..."
-      dir=~/.$module
-      mkdir -p $dir
+    for f in $module/*
+    do
+      ln -s $PWD/$f $dir/${f##*/}
+    done
+  }
+}
 
-      for f in $module/*
-      do
-        ln -s $PWD/$f $dir/${f##*/}
-      done
-    fi
+[[ $# -gt 0 ]] && {
 
-  fi
+  for $module in $@
+  do
+    [[ -f $module ]] || {
+      echo "module '$module' not found"
+      exit 1
+    }
+  done
+
+  for $module in $@
+  do
+    install $module
+  done
+  echo done
+
+  exit 0
+}
+
+for module in *
+do
+  install $module
 done
-
-echo "done"
+echo done
