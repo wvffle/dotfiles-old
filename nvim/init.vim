@@ -2,13 +2,14 @@
 if &compatible
   set nocompatible " Be iMproved
 endif
-set runtimepath+=$HOME/.config/nvim/dein/repos/github.com/Shougo/dein.vim
+set runtimepath+=/home/waff/.config/nvim/dein/repos/github.com/Shougo/dein.vim
 call dein#begin(expand('~/.config/nvim/dein'))
 
 " Let dein manage dein
 call dein#add('Shougo/deoplete.nvim')
 
 " Colours
+call dein#add('ayu-theme/ayu-vim')
 call dein#add('mhartington/oceanic-next')
 call dein#add('pangloss/vim-javascript')
 call dein#add('othree/html5.vim')
@@ -16,7 +17,10 @@ call dein#add('digitaltoad/vim-pug')
 call dein#add('wavded/vim-stylus')
 call dein#add('clavery/vim-signcolor')
 call dein#add('wvffle/vim-css-color')
+call dein#add('plasticboy/vim-markdown')
 call dein#add('ryanoasis/vim-devicons')
+autocmd FileType nerdtree setlocal nolist
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
 " have to fix conceal
 "call dein#add('Yggdroot/indentLine')
 
@@ -39,6 +43,7 @@ call dein#add('terryma/vim-multiple-cursors')
 call dein#add('Raimondi/delimitMate')
 call dein#add('tpope/vim-surround')
 call dein#add('wvffle/vimterm')
+call dein#add('Floobits/floobits-neovim')
 
 " NERDTree
 call dein#add('scrooloose/nerdtree')
@@ -59,8 +64,10 @@ set t_Co=256
 set t_8f=\[[38;2;%lu;%lu;%lum
 set t_8b=\[[48;2;%lu;%lu;%lum
 set termguicolors
-set background=dark
-colorscheme OceanicNext
+" set background=dark
+" colorscheme OceanicNext
+let ayucolor="dark"
+colorscheme ayu
 set cursorline
 
 set ttimeout
@@ -111,7 +118,8 @@ let g:javascript_conceal_prototype            = "¶"
 let g:javascript_conceal_static               = "•"
 let g:javascript_conceal_super                = "Ω"
 let g:javascript_conceal_arrow_function       = "⇒"
-set conceallevel=1
+let g:vim_markdown_fenced_languages = ['c++=cpp', 'viml=vim', 'bash=sh', 'ini=dosini', 'js=javascript']
+set conceallevel=2
 
 autocmd FileType stylus if get(b:, 'is_signs_set', 0) == 0 | call signcolor#toggle_signs_for_colors_in_buffer() | endif
 autocmd FileType javascript setlocal foldmethod=syntax
