@@ -23,8 +23,22 @@ create_link init.vim
 replace ~\/ $HOME/ init.vim
 clone Shougo/dein.vim dein/repos/github.com/Shougo/dein.vim
 
-if which programname > /dev/null
+if which npm > /dev/null
 then
   sudo pacman -S nodejs
 fi
-npm install -g tern
+
+if [ -x eslint ]
+then
+  npm install -g eslint
+fi
+
+if [ -x jscs ]
+then
+  npm install -g jscs
+fi
+
+if [ -x tern ]
+then
+  npm install -g tern
+fi
