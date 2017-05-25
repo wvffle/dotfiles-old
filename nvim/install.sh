@@ -4,7 +4,14 @@ dir=~/.config/$module
 mkdir -p $dir
 
 function create_link {
-  ln -s $PWD/$module/$1 $dir/$1
+  dest=$2
+
+  if [ -z "$dest" ]
+  then
+    dest=$1
+  fi
+
+  ln -s $PWD/$module/$1 $dir/$dest
 }
 
 function escape {
@@ -20,6 +27,7 @@ function clone {
 }
 
 create_link init.vim
+create_link tern-project.json .tern-project
 replace ~\/ $HOME/ init.vim
 clone Shougo/dein.vim dein/repos/github.com/Shougo/dein.vim
 
