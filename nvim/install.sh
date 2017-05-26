@@ -31,22 +31,22 @@ create_link tern-project.json .tern-project
 replace ~\/ $HOME/ init.vim
 clone Shougo/dein.vim dein/repos/github.com/Shougo/dein.vim
 
-if which npm > /dev/null
+if [ ! -x $(which npm) ]
 then
   sudo pacman -S nodejs
 fi
 
-if [ -x eslint ]
+if [ ! -x $(which eslint) ]
 then
   npm install -g eslint
 fi
 
-if [ -x jscs ]
+if [ ! -x $(which jscs) ]
 then
   npm install -g jscs
 fi
 
-if [ -x tern ]
+if [ ! -x $(which tern) ]
 then
   npm install -g tern
 fi
