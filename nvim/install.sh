@@ -29,7 +29,11 @@ function clone {
 create_link init.vim
 create_link tern-project.json .tern-project
 replace ~\/ $HOME/ init.vim
-clone Shougo/dein.vim dein/repos/github.com/Shougo/dein.vim
+
+if [ ! -d $dir/dein ]
+then
+  clone Shougo/dein.vim dein/repos/github.com/Shougo/dein.vim
+fi
 
 if [ ! -x $(which npm) ]
 then
