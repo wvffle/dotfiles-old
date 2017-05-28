@@ -30,27 +30,27 @@ create_link init.vim
 create_link tern-project.json .tern-project
 replace ~\/ $HOME/ init.vim
 
-if [ ! -d $dir/dein ]
+if [[ ! -d $dir/dein ]]
 then
   clone Shougo/dein.vim dein/repos/github.com/Shougo/dein.vim
 fi
 
-if [ ! -x $(which npm) ]
+if [[ ! -x $(which npm) ]]
 then
   sudo pacman -S nodejs
 fi
 
-if [ ! -x $(which eslint) ]
+if [[ ! -x $(which eslint) ]]
 then
   npm install -g eslint
 fi
 
-if [ ! -x $(which jscs) ]
+if [[ ! -x $(which jscs) ]]
 then
   npm install -g jscs
 fi
 
-if [ ! -x $(which tern) ]
+if [[ ! -x $(which tern) ]]
 then
   npm install -g tern
 fi
