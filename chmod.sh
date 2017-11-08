@@ -7,3 +7,4 @@ do
     chmod +x $file/install.sh
   fi
 done
+# mah
